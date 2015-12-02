@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      >
+<h:head></h:head>
+<h:body>
+	<h:form prependId="false">
+		<h:panelGrid columns="3">
+			<h:outputLabel id="label1" value="#{msg.user_label}"/>
+			<h:inputText id="user" value="#{pfBean.name}" required="true" requiredMessage="Fill with the user"/>
+			<h:message for="user"/>
+			<h:outputLabel id="label2" value="#{msg.address_label}"/>
+			<h:inputText id="add" value="#{pfBean.address}" required="true" requiredMessage="Fill with the address"/>
+			<h:message for="add"/>
+			<h:outputLabel id="label3" value="Email"/>
+			<h:inputText id="mail" value="#{pfBean.email}" required="true" requiredMessage="Preencher com o email" validatorMessage="Invalid email">
+				<f:validateLength minimum="5" maximum="20"/>
+			</h:inputText>
+			<h:message for="mail"/>
+			<h:outputLabel value="#{msg.postalcode_label}"/>
+			<h:inputText id="cep" value="#{pfBean.cep}" required="true" requiredMessage="Fill with the cep"/>
+			<h:column>
+				<p:commandButton id="buttonCep" value="Cep" actionListener="#{pfBean.calculateCep}" update="add,client" process="@this,user">
+				</p:commandButton>
+				<h:message for="cep"/>
+			</h:column>			
+			<h:commandButton value="Submit" action="submit"/>
+		</h:panelGrid>
+		<br></br>
+		<br></br>
+		<p:messages autoUpdate="true" for="complement"/>
+		<br></br>
+		<p:dialog widgetVar="diag" header="Complements">
+			<h:panelGrid columns="2">
+				<h:outputLabel value="Client"/>
+				<p:inputText id="client" value="#{pfBean.name}"/>
+				<h:outputLabel value="Complements"/>
+				<h:selectOneMenu id="complements" value="#{pfBean.complement}" converter="pfConv">
+					<f:selectItem noSelectionOption="true" itemLabel="Choose complement" itemValue="*"/>
+					<f:selectItems var="complement" value="#{listComp}" itemLabel="#{complement.name}" itemValue="#{complement}"/>
+				</h:selectOneMenu>
+				<p:commandButton value="Show" process="@this,client,complements" update="txt" actionListener="#{pfBean.showComplement}"/>
+			</h:panelGrid>
+		</p:dialog>
+		<br></br>		
+		<h:outputLabel value="Complement Ajax:"/>
+		<p:inputText id="txt" value="#{pfBean.complement.name}"/>
+		<p:messages id="msg" autoUpdate="true"/>
+		<br></br>
+		<p:inputText id="closeInput" immediate="true" required="true" requiredMessage="Fill before closing system"/>
+		<p:commandButton ajax="false" value="Close" immediate="true" action="close"/>
+		<p:message for="closeInput"/>
+	</h:form>
+</h:body>
+</html>
